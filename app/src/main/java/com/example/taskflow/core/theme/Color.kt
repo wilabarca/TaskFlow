@@ -1,4 +1,4 @@
-package com.example.taskflow.ui.theme
+package com.example.taskflow.core.theme
 
 import androidx.compose.ui.graphics.Color
 
