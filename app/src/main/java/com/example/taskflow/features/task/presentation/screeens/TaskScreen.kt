@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -16,27 +17,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.taskflow.features.task.presentation.components.PurpleDark
 import com.example.taskflow.features.task.presentation.components.TaskHome
 import com.example.taskflow.features.task.presentation.components.Purple
-
-data class TaskPreview(
-    val titulo: String,
-    val descripcion: String,
-    val estatus: String
-)
-
-val tareasEjemplo = listOf(
-    TaskPreview("App Moviles", "Crear un app de clima", "Inicio"),
-    TaskPreview("App Moviles", "", "En proceso"),
-    TaskPreview("App Moviles", "", "Finalizado")
-)
-
+import com.example.taskflow.features.task.presentation.viewmodels.TaskViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskScreen(
-    onAgregarTarea: () -> Unit = {}
+    viewmodel: TaskViewModel = hiltViewModel()
 ) {
+    val tasks by viewmodel.tasks.collectAsStateWithLifecycle()
     Scaffold(
         topBar = {
             TopAppBar(
@@ -55,7 +47,7 @@ fun TaskScreen(
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = onAgregarTarea,
+                onClick = viewmodel::onAgregarTarea,
                 containerColor = Purple,
                 contentColor = Color.White,
                 shape = RoundedCornerShape(16.dp)
@@ -100,7 +92,7 @@ fun TaskScreen(
                     color = Purple.copy(alpha = 0.15f)
                 ) {
                     Text(
-                        text = "${tareasEjemplo.size} tareas",
+                        text = "${tasks.size} tareas",
                         fontSize = 13.sp,
                         color = PurpleDark,
                         fontWeight = FontWeight.SemiBold,
@@ -115,7 +107,7 @@ fun TaskScreen(
                 modifier = Modifier.weight(1f),
                 contentPadding = PaddingValues(bottom = 80.dp)
             ) {
-                items(tareasEjemplo) { tarea ->
+                items(tasks) { tarea ->
                     TaskHome(
                         titulo = tarea.titulo,
                         descripcion = tarea.descripcion,

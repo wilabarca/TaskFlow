@@ -3,13 +3,13 @@ package com.example.taskflow.features.task.domain.usecases
 import com.example.taskflow.features.task.domain.entities.Task
 import com.example.taskflow.features.task.domain.repositories.TaskRepository
 
-class PutTaskUseCase(
+class PostTaskUseCase(
     private val repository: TaskRepository
 ) {
-    suspend operator fun invoke(titulo: String, descripcion: String, estatus: String, index: UInt): Result<String>{
-        val modifiedTask = Task(
+    suspend operator fun invoke(titulo: String, descripcion: String, estatus: String): Result<String> {
+        val newtask = Task(
             titulo, descripcion, estatus
         )
-        return repository.update(modifiedTask, index)
+        return repository.post(newtask)
     }
 }
