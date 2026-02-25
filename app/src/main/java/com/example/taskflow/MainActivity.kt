@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.example.taskflow.core.theme.TaskFlowTheme
-import com.example.taskflow.features.task.presentation.screeens.FormScreen
+import com.example.taskflow.features.task.presentation.screeens.TaskScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -15,7 +15,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             TaskFlowTheme {
-                FormScreen()
+                TaskScreen(
+                    onAgregarTarea = { }
+                )
             }
         }
     }
