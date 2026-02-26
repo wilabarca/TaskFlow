@@ -15,7 +15,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TaskViewModel @Inject constructor(
-    private val putTaskUseCase: PutTaskUseCase,
     private val deleteTaskUseCase: DeleteTaskUseCase,
     watchTasksUseCase: WatchTasksUseCase
 ) : ViewModel() {

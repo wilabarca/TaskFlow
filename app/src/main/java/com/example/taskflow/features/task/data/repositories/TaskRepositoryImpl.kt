@@ -56,7 +56,8 @@ class TaskRepositoryImpl @Inject constructor(
             try {
                 client.wss(
                     host = "api-moviles-app-tiempo-real.onrender.com",
-                    path = "/tasks"
+                    path = "/tasks",
+                    port = 443
                 ) {
                     session = this
                     for (frame in incoming) {
