@@ -18,6 +18,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.taskflow.features.task.presentation.viewmodels.TaskFormViewModel
 
 val Purple = Color(0xFF7B7FC4)
 val PurpleLight = Color(0xFFB0B4E8)
@@ -26,12 +29,12 @@ val BackgroundCard = Color(0xFFFAFAFF)
 
 @Composable
 fun TaskForm(
-    onAgregar: (titulo: String, estatus: String, descripcion: String) -> Unit = { _, _, _ -> }
+    viewmodel: TaskFormViewModel = hiltViewModel()
 ) {
-    var titulo by remember { mutableStateOf("") }
-    var estatus by remember { mutableStateOf("") }
-    var descripcion by remember { mutableStateOf("") }
-    var expanded by remember { mutableStateOf(false) }
+    val titulo by viewmodel.titulo.collectAsStateWithLifecycle()
+    val estatus by viewmodel.estatus.collectAsStateWithLifecycle()
+    val descripcion by viewmodel.descripcion.collectAsStateWithLifecycle()
+    val expanded by viewmodel.expanded.collectAsStateWithLifecycle()
 
     val opciones = listOf("Inicio", "En proceso", "Finalizado")
 
@@ -87,7 +90,7 @@ fun TaskForm(
             Spacer(modifier = Modifier.height(6.dp))
             OutlinedTextField(
                 value = titulo,
-                onValueChange = { titulo = it },
+                onValueChange = { it -> viewmodel.setTitulo(it) },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 placeholder = { Text("Escribe el título", color = Color.LightGray) },
@@ -120,7 +123,7 @@ fun TaskForm(
                             color = if (expanded) Purple else Color(0xFFDDDDDD),
                             shape = RoundedCornerShape(12.dp)
                         )
-                        .clickable { expanded = !expanded }
+                        .clickable { viewmodel.toggleExpanded() }
                         .padding(horizontal = 16.dp, vertical = 14.dp)
                 ) {
                     Row(
@@ -154,7 +157,7 @@ fun TaskForm(
 
                 DropdownMenu(
                     expanded = expanded,
-                    onDismissRequest = { expanded = false },
+                    onDismissRequest = { viewmodel.toggleOffExpanded() },
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(Color.White)
@@ -180,8 +183,8 @@ fun TaskForm(
                                 }
                             },
                             onClick = {
-                                estatus = opcion
-                                expanded = false
+                                viewmodel.setEstatus(opcion)
+                                viewmodel.toggleOffExpanded()
                             }
                         )
                     }
@@ -199,7 +202,7 @@ fun TaskForm(
             Spacer(modifier = Modifier.height(6.dp))
             OutlinedTextField(
                 value = descripcion,
-                onValueChange = { descripcion = it },
+                onValueChange = { it -> viewmodel.setDesc(it) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(130.dp),
@@ -217,7 +220,7 @@ fun TaskForm(
             Spacer(modifier = Modifier.height(24.dp))
 
             Button(
-                onClick = { onAgregar(titulo, estatus, descripcion) },
+                onClick = { viewmodel.onAgregar() },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(52.dp),

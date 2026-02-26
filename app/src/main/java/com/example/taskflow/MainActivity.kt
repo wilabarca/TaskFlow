@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import com.example.taskflow.core.navigation.NavigationApp
 import com.example.taskflow.core.theme.TaskFlowTheme
 import com.example.taskflow.features.task.presentation.screeens.TaskScreen
 import dagger.hilt.android.AndroidEntryPoint
@@ -15,9 +16,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             TaskFlowTheme {
-                TaskScreen(
-                    onAgregarTarea = { }
-                )
+                NavigationApp()
             }
         }
     }

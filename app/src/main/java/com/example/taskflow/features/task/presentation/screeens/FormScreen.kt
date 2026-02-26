@@ -42,11 +42,7 @@ fun FormScreen() {
                 )
                 .padding(padding)
         ) {
-            TaskForm(
-                onAgregar = { titulo, estatus, descripcion ->
-                    // Aquí mañana conectas el ViewModel
-                }
-            )
+            TaskForm()
         }
     }
 }

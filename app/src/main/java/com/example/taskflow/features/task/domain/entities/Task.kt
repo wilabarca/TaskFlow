@@ -1,4 +1,7 @@
 package com.example.taskflow.features.task.domain.entities
 
-class Task {
-}
+data class Task (
+    val titulo: String,
+    val descripcion: String,
+    val estatus: String
+)
