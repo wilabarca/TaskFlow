@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -19,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.taskflow.features.task.presentation.components.EditTaskForm
 import com.example.taskflow.features.task.presentation.components.PurpleDark
 import com.example.taskflow.features.task.presentation.components.TaskHome
 import com.example.taskflow.features.task.presentation.components.Purple
@@ -26,9 +28,22 @@ import com.example.taskflow.features.task.presentation.viewmodels.TaskViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskScreen(
+    onNavigateToForm: () -> Unit,
     viewmodel: TaskViewModel = hiltViewModel()
 ) {
     val tasks by viewmodel.tasks.collectAsStateWithLifecycle()
+    val editTarget by viewmodel.editTarget.collectAsStateWithLifecycle()
+
+    editTarget?.let { (index, task) ->
+        EditTaskForm(
+            index = index,
+            titulo = task.titulo,
+            descripcion = task.descripcion,
+            estatus = task.estatus,
+            onDismiss = viewmodel::onDismissEdicion
+        )
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -47,7 +62,7 @@ fun TaskScreen(
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = viewmodel::onAgregarTarea,
+                onClick = { viewmodel.onAgregarTarea(onNavigateToForm) },
                 containerColor = Purple,
                 contentColor = Color.White,
                 shape = RoundedCornerShape(16.dp)
@@ -107,13 +122,13 @@ fun TaskScreen(
                 modifier = Modifier.weight(1f),
                 contentPadding = PaddingValues(bottom = 80.dp)
             ) {
-                items(tasks) { tarea ->
+                itemsIndexed(tasks) { index, tarea ->
                     TaskHome(
                         titulo = tarea.titulo,
                         descripcion = tarea.descripcion,
                         estatus = tarea.estatus,
-                        onEliminar = { },
-                        onActualizar = { }
+                        onEliminar = { viewmodel.onEliminarTarea(index.toUInt()) },
+                        onActualizar = { viewmodel.onEditarTarea(index.toUInt(), tarea) }
                     )
                 }
             }
