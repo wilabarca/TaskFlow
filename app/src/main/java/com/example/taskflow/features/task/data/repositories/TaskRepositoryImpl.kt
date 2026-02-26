@@ -8,6 +8,7 @@ import com.example.taskflow.features.task.domain.entities.Task
 import com.example.taskflow.features.task.domain.repositories.TaskRepository
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.websocket.webSocket
+import io.ktor.client.plugins.websocket.wss
 import io.ktor.http.HttpMethod
 import io.ktor.websocket.DefaultWebSocketSession
 import io.ktor.websocket.Frame
@@ -53,11 +54,10 @@ class TaskRepositoryImpl @Inject constructor(
     private suspend fun maintainConnection() {
         while (true) {
             try {
-                client.webSocket(
-                    method = HttpMethod.Get,
-                    host = "192.168.0.2",
-                    port = 8080,
-                    path = "/tasks"
+                client.wss(
+                    host = "api-moviles-app-tiempo-real.onrender.com",
+                    path = "/tasks",
+                    port = 443
                 ) {
                     session = this
                     for (frame in incoming) {
